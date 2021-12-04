@@ -1,19 +1,8 @@
-function checkSame (lottos, win_nums){
-    let best = 0;
-    for (let i = 0; i < lottos.length ; i++) {
-        if (lottos[i] === 0) continue;
-        for (let j = 0 ; j < win_nums.legnth ; j++) {
-            if (lottos[i]===win_nums[j]) best -=1;
-        }
-    }
-    return best;
-}
+const result = [6,6,5,4,3,2,1]
+const checkSameNumber = (lottos, win_nums) => lottos.filter((number)=> win_nums.includes(number)).length;
 
 function solution(lottos, win_nums) {
-    let best = 6;
-    const checkSameNumber = checkSame(lottos, win_nums);
-    best -= checkSameNumber;
-    best -= lottos.filter((number)=>number === 0).length;
-    const worst = 6 - checkSameNumber;
-    return [best, worst];
+    const numberOfSameNumber = checkSameNumber(lottos, win_nums);
+    const numberOfZero = lottos.filter((number)=> number === 0).length;
+    return [result[numberOfSameNumber+numberOfZero], result[numberOfSameNumber]];
 }
