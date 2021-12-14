@@ -1,4 +1,21 @@
 function solution(w, h) {
+    const getY = (x) => -1 * h * x / w + h;    
+    
+    if (w === 1 || h === 1) return 0;
+    else if (w === h) return w * h - w;
+    
+    let totalBlock = w * h;
+    for (let i = 0 ; i < w ; i++) totalBlock -= (Math.ceil(getY(i)) - Math.floor(getY(i+1)));
+    
+    return totalBlock;
+}
+
+/*
+
+이전 버전
+문제 : 자바스크립트의 계산 한계(?)를 고려하지 않음 (소숫점 계산)
+
+function solution(w, h) {
     if (w === 1 || h === 1) return 0;
     else if (w === h) return w * h - w;
     
@@ -12,11 +29,13 @@ function solution(w, h) {
 }
 
 const getY = (x, w, h) => -1 * h / w * x + h;
+*/
 
 /*
 
 이전 버전
-W가 홀수인지 짝수인지에 따라 사용불가능한 블록 개수가 다름
+문제 : W가 홀수인지 짝수인지에 따라 사용불가능한 블록 개수가 다름 (잘못된 로직)
+
 function solution(w, h) {
     // 길이가 1이면 전부 못 씀
     if (w === 1 || h === 1) return 0;
