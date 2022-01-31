@@ -7,40 +7,32 @@ const divide = (chunk) => {
     return [tmp[0][0], tmp[1][0]];
 }
 
+const CHAR_MAP = {
+    "*" : 2,
+    "#" : -1
+}
+
+const SCORE_MAP = {
+    "S" : 1,
+    "D" : 2,
+    "T" : 3
+}
 
 function solution(dartResult) {
     const chunks = getChunks(dartResult);
 
-    let i = 0;
-    while (i < chunks.length) {
-        if (chunks[i] === "*") {
-            if (i-2 >= 0) chunks[i-2] = chunks[i-2] * 2;
-            chunks[i-1] = chunks[i-1] * 2;
-            chunks.splice(i,1);
-            i --;
+    let index = 0;
+    while (index < chunks.length) {
+        if (chunks[index] !== "*" && chunks[index] !== "#") {
+            const [number, area] = divide(chunks[index]); 
+            chunks[index] = number ** SCORE_MAP[area];
+        } else {
+            if (chunks[index] === "*" && index-2 >= 0) chunks[index-2] = chunks[index-2] * CHAR_MAP[chunks[index]];
+            chunks[index-1] = chunks[index-1] * CHAR_MAP[chunks[index]];
+            chunks.splice(index,1);
+            index --;
         }
-        else if (chunks[i] === "#") {
-            chunks[i-1] = chunks[i-1] * -1;
-            chunks.splice(i,1);
-            i --;
-        }
-        else {
-            const [number, area] = divide(chunks[i]); 
-            let num = 1;
-            switch(area) {
-                case "S":
-                    num = 1;
-                    break;
-                case "D":
-                    num = 2;
-                    break;
-                case "T":
-                    num = 3;
-                    break;
-            }
-            chunks[i] = number ** num;
-        }
-        i ++;
+        index ++;
     }
     
     return chunks.reduce((a,b) => a + b);
