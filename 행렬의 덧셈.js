@@ -1,12 +1,11 @@
 function solution(arr1, arr2) {
     const answer = [[]];
-    for (let i = 0 ; i < arr1.length ; i++) {
-        for (let j = 0 ; j < arr1[i].length ; j++) {
-            if (answer[i]=== undefined) {
-                answer[i] = [arr1[i][j] + arr2[i][j]];   
-            }
-            else answer[i].push(arr1[i][j] + arr2[i][j])            
-        }
-    }
+
+    arr1.forEach((arrr1, index)=> {
+        arrr1.forEach((num, index2)=>{
+            if (answer[index] === undefined) answer[index] = [num + arr2[index][index2]]
+            else answer[index].push(num+arr2[index][index2])
+        })
+    }) 
     return answer;
 }
