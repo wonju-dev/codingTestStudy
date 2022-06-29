@@ -1,20 +1,22 @@
-def cut(height: int) -> int:
-    if height >= currentHeight:
-        return height - currentHeight
+def isMoreThanNeeds(mid: int) -> bool:
+    heightSum = 0
+    for tree in trees:
+        if tree >= mid:
+            heightSum += tree - mid
+    return heightSum >= m
+
+
+n, m = map(int, input().split())
+trees = list(map(int, input().split()))
+
+start = 0
+end = max(trees)
+
+while start <= end:
+    mid = (start + end) // 2
+    if isMoreThanNeeds(mid):
+        start = mid + 1
     else:
-        return 0
+        end = mid - 1
 
-
-n, m = list(map(int, input().split()))
-heights = list(map(int, input().split()))
-
-highest = max(heights)
-
-currentHeight = highest
-
-while currentHeight > 0:
-    cutSum = sum(list(map(cut, heights)))
-    if cutSum >= m:
-        print(currentHeight)
-        break
-    currentHeight -= 1
+print(end)
