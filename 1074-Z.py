@@ -1,51 +1,72 @@
 n, r, c = list(map(int, input().split()))
-field = []
+
+field = [
+    [(0, 0), (2 ** n // 2 - 1, 2 ** n // 2 - 1)],
+    [(0, 2 ** n // 2), (2 ** n // 2 - 1, 2 ** n - 1)],
+    [(2 ** n // 2, 0), (2 ** n - 1, 2 ** n // 2 - 1)],
+    [(2 ** n // 2, 2 ** n // 2), (2 ** n - 1, 2 ** n - 1)],
+]
 count = 0
 
-for a in range(2 ** n):
-    row = []
-    for b in range(2 ** n):
-        row.append((a, b))
-    field.append(row)
+
+def findIndex(field):
+    for i in range(len(field)):
+        if field[i][0][0] == r and field[i][0][1] == c:
+            return i
 
 
-def getSection(field, index):
-    section = []
-    length = len(field)
+def getNewField(row):
+    fx = row[0][0]
+    fy = row[0][1]
+    lx = row[1][0]
+    ly = row[1][1]
 
-    if index == 0:
-        for a in range(length // 2):
-            section.append(field[a][: length // 2])
-    if index == 1:
-        for a in range(length // 2):
-            section.append(field[a][length // 2 : length])
-    if index == 2:
-        for a in range(length // 2, length):
-            section.append(field[a][: length // 2])
-    if index == 3:
-        for a in range(length // 2, length):
-            section.append(field[a][length // 2 : length])
+    if lx - fx == 1 and ly - fy == 1:
+        return [
+            [(fx, fy), (fx, fy)],
+            [(fx, fy + 1), (fx, fy + 1)],
+            [(fx + 1, fy), (fx + 1, fy)],
+            [(fx + 1, fy + 1), (fx + 1, fy + 1)],
+        ]
 
-    return section
+    xRange = list(range(fx, lx + 1))
+    yRange = list(range(fy, ly + 1))
+
+    return [
+        [
+            (xRange[0], yRange[0]),
+            (xRange[len(xRange) // 2 - 1], yRange[len(yRange) // 2 - 1]),
+        ],
+        [
+            (xRange[0], yRange[len(yRange) // 2]),
+            (xRange[len(xRange) // 2 - 1], yRange[-1]),
+        ],
+        [
+            (xRange[len(xRange) // 2], yRange[0]),
+            (xRange[-1], yRange[len(yRange) // 2 - 1]),
+        ],
+        [
+            (xRange[len(xRange) // 2], yRange[len(yRange) // 2]),
+            (xRange[-1], yRange[-1]),
+        ],
+    ]
 
 
 def isInSection(section):
-    first = section[0][0]
-    end = section[len(section) - 1][len(section) - 1]
+    first = section[0]
+    end = section[1]
 
     return (first[0] <= r and r <= end[0]) and (first[1] <= c and c <= end[1])
 
 
 def recursive(field, count):
-    if len(field) == 1 and len(field[0]) == 1:
-        return count
-
     for i in range(4):
-        section = getSection(field, i)
-        if isInSection(section):
-            return recursive(section, count)
+        if field[i][0][0] == field[i][1][0] and field[i][0][1] == field[i][1][1]:
+            return count + findIndex(field)
+        if isInSection(field[i]):
+            return recursive(getNewField(field[i]), count)
         else:
-            count += len(section) ** 2
+            count += (field[i][1][0] - field[i][0][0] + 1) ** 2
 
 
 print(recursive(field, count))
