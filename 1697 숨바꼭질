@@ -5,7 +5,6 @@ stack = deque()
 stack.append((n, m, 0))
 
 while len(stack) !=0:
-<<<<<<< HEAD
     n, m, count = stack.popleft()
     if n == m:
         print(count)
