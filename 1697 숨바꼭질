@@ -1,0 +1,15 @@
+from collections import deque
+
+n, m = map(int, input().split())
+stack = deque()
+stack.append((n, m, 0))
+
+while len(stack) !=0:
+    popped = stack.popleft()
+    if popped[0] == popped[1]:
+        print(popped[2])
+        break
+    else:
+        stack.append((popped[0] - 1, popped[1], popped[2] + 1))
+        stack.append((popped[0] + 1, popped[1], popped[2] + 1))
+        stack.append((popped[0] * 2, popped[1], popped[2] + 1))
