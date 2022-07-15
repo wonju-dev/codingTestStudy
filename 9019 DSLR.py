@@ -1,13 +1,15 @@
 from collections import deque
 
 def trimZero(num):
-    return num.lstrip("0")
+    result = str(num).lstrip("0")
+    return result if result != "" else "0"
 
 def D(num):
-    return str((int(trimZero(num)) * 2) % 10000)
+    return str((int(num) * 2) % 10000)
 
 def S(num):
-    return str(int(trimZero(num)) - 1) if int(trimZero(num)) -1 != 0 else '9999'
+    result = str(int(num) - 1)
+    return result if int(result) > 0 else '9999'
 
 def L(num):
     if len(num) != 4:
@@ -23,16 +25,16 @@ def R(num):
 case = int(input())
 for _ in range(case):
     a, b = input().split()
+    numberAndWord = [False for _ in range(10001)]
     queue = deque()
-    queue.append((a, []))
+    queue.append((a, ""))
     
-    loop = 0
-
     while trimZero(queue[0][0]) != b:
         curr, hist = queue.popleft()
-        queue.append((D(curr), hist + ['D']))
-        queue.append((S(curr), hist + ['S']))
-        queue.append((L(curr), hist + ['L']))
-        queue.append((R(curr), hist + ['R']))
+        numberAndWord[int(curr)] = True
+
+        for nextNum in ((D(curr), hist + 'D'), (S(curr), hist + 'S'), (L(curr), hist + 'L'), (R(curr), hist + 'R')):
+            if 0 <= int(nextNum[0]) <= 9999 and not numberAndWord[int(nextNum[0])]:
+                queue.append((trimZero(nextNum[0]), nextNum[1]))
         
     print("".join(queue[0][1]))
