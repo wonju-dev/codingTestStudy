@@ -1,6 +1,11 @@
+import sys
+input = sys.stdin.readline
+
 n = int(input())
-heap = [-1] * 100000
+SIZE = 100000
+heap = [-1] * SIZE
 lastIndex = 0
+
 
 def getLeftIndex(index):
     return (index + 1) * 2 - 1
@@ -19,23 +24,27 @@ def swapTopDown(index):
     leftIndex = getLeftIndex(index)
     rightIndex = getRightIndex(index)
 
-    biggerSiblingIndex = leftIndex if heap[leftIndex] > heap[rightIndex] else rightIndex
-    if heap[index] < heap[biggerSiblingIndex]:
-        heap[index], heap[biggerSiblingIndex] = heap[biggerSiblingIndex], heap[index]
-        swapTopDown(biggerSiblingIndex)
-        return
+    if rightIndex < SIZE:
+        biggerSiblingIndex = leftIndex if heap[leftIndex] > heap[rightIndex] else rightIndex
+        if heap[index] < heap[biggerSiblingIndex]:
+            heap[index], heap[biggerSiblingIndex] = heap[biggerSiblingIndex], heap[index]
+            swapTopDown(biggerSiblingIndex)
+            return
 
 def add(num):
     global lastIndex
+    leftIndex = getLeftIndex(lastIndex)
+    rightIndex = getRightIndex(lastIndex)
 
-    for index in (lastIndex, getLeftIndex(lastIndex), getRightIndex(lastIndex)):
-        if heap[index] == -1:
-            heap[index] = num
-            swapBottomUp(index)
-            return
-    else:
-        lastIndex += 1
-        add(num)
+    if rightIndex < SIZE:
+        for index in (lastIndex, leftIndex, rightIndex):
+            if heap[index] == -1:
+                heap[index] = num
+                swapBottomUp(index)
+                break
+        else:
+            lastIndex += 1
+            add(num)
 
 def pop():
     popped = heap[0]
@@ -45,9 +54,10 @@ def pop():
     leftIndex = getLeftIndex(lastIndex)
     rightIndex = getRightIndex(lastIndex)
 
-    biggerSiblingIndex = leftIndex if heap[leftIndex] > heap[rightIndex] else rightIndex
-    heap[0], heap[biggerSiblingIndex] = heap[biggerSiblingIndex], heap[0]
-    swapTopDown(0)
+    if rightIndex < SIZE:
+        biggerSiblingIndex = leftIndex if heap[leftIndex] > heap[rightIndex] else rightIndex
+        heap[0], heap[biggerSiblingIndex] = heap[biggerSiblingIndex], heap[0]
+        swapTopDown(0)
         
     return popped
 
