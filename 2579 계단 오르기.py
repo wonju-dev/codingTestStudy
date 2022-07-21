@@ -1,20 +1,14 @@
 n = int(input())
-stairs = [0]
-for _ in range(n):
-    stairs.append(int(input()))
+s = [0] * 301
+for i in range(1, n + 1):
+    s[i] = int(input())
 
-d = []
-for i in range(n + 1):
-    d.append([stairs[i], 0])
 
-d[n][1] = n
+d = [0] * 301
+d[1] = s[1]
+d[2] = d[1] + s[2]
 
-for i in range(n, 1, -1):
-    if d[i - 1][1] != d[i][1]:
-        d[i - 1][1] = i
-        d[i - 1][0] = d[i][0] + stairs[i - 1]
+for i in range(3, n + 1):
+    d[i] = max([d[i-3] + s[i-1], d[i-2]]) + s[i]
 
-    d[i - 2][1] = i
-    d[i - 2][0] = d[i][0] + stairs[i - 2]
-
-print(max(d[0:2], key= lambda x : x[0])[0])
+print(d[n])
