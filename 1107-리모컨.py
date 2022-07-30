@@ -1,31 +1,20 @@
 from itertools import product
 
+target = int(input())
+n = int(input())
+brokens = list(map(str, input().split()))
+NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+availableNumbers = list(set(NUMBERS) - set(brokens))
 
-def join(tuple):
-    return int("".join(list(map(str, tuple))))
-
-
-n = input()
-m = int(input())
-brokens = list(map(int, input().split()))
-buttons = [_ for _ in range(0, 10)]
-count = 0
-closeLocation = ""
-
-if int(n) == 100:
-    print(0)
-elif len(brokens) == 10 and int(n) < 100:
-    print(100 - int(n))
-elif len(brokens) == 10 and int(n) > 100:
-    print(int(n) - 100)
+if len(availableNumbers) == 0:
+    print(abs(target - 100))
 else:
-    for b in brokens:
-        buttons.remove(b)
+    availables = list(product(availableNumbers, repeat=len(str(target)) + 1))
 
-    channels = list(map(join, list(product(buttons, repeat=len(n)))))
-    closest = channels[0]
-    for c in channels:
-        if abs(int(n) - c) < abs(int(n) - closest):
-            closest = c
+    closest = int("".join(availables[0]))
+    for number in availables:
+        newNumber = int("".join(number))
+        if abs(target - closest) > abs(target - newNumber):
+            closest = newNumber
 
-    print(len(str(closest)) + abs(int(n) - closest))
+    print(min([abs(100 - target), len(str(closest)) + abs(target - closest)]))
