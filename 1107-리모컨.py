@@ -1,20 +1,20 @@
-from itertools import product
-
 target = int(input())
-n = int(input())
-brokens = list(map(str, input().split()))
-NUMBERS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
-availableNumbers = list(set(NUMBERS) - set(brokens))
+# +, - 으로 이동한 횟수로 초기화
+ans = abs(100 - target)
+m = int(input())
 
-if len(availableNumbers) == 0:
-    print(abs(target - 100))
+if m != 0 :
+    broken = set(input().split())
 else:
-    availables = list(product(availableNumbers, repeat=len(str(target)) + 1))
+    broken = set()
 
-    closest = int("".join(availables[0]))
-    for number in availables:
-        newNumber = int("".join(number))
-        if abs(target - closest) > abs(target - newNumber):
-            closest = newNumber
+for num in range(1000001):
+    for n in str(num):
+        if n in broken:
+            break
+    # 버튼으로 누를 수 있는 숫자에 한해서 검증
+    else:
+        # 이전 최소값 vs 해당번호로 버튼 눌러서 이동 + '+, -' 으로 이동한 횟수
+        ans = min(ans, len(str(num)) + abs(num - target))
 
-    print(min([abs(100 - target), len(str(closest)) + abs(target - closest)]))
+print(ans)
