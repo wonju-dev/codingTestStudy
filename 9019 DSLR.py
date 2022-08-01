@@ -19,16 +19,19 @@ case = int(input())
 for _ in range(case):
     a, b = map(int, input().split())
     
-    queue = deque()
-    queue.append((a, ""))
+    q = deque()
+    q.append((a, ""))
 
     visited = [False] * 10000
     
-    while queue[0][0] != b:
-        curr, hist = queue.popleft()
-        visited[int(curr)] = True
+    while q:
+        curr, hist = q.popleft()
 
-        for nextNum in ((D(curr), hist + 'D'), (S(curr), hist + 'S'), (L(curr), hist + 'L'), (R(curr), hist + 'R')):
-            if not visited[nextNum[0]]:
-                queue.append((nextNum[0], nextNum[1]))
-    print(queue[0][1])
+        if curr == b:
+            print(hist)
+            break
+
+        for nextPair in ((D(curr), hist + 'D'), (S(curr), hist + 'S'), (L(curr), hist + 'L'), (R(curr), hist + 'R')):
+            if not visited[nextPair[0]]:
+                visited[nextPair[0]] = True
+                q.append(nextPair)
