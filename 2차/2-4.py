@@ -3,7 +3,7 @@ def findLowerBound(topping):
     tail = len(topping)
     mid = (head + tail) // 2
 
-    while len(set(topping[:mid])) != len(set(topping[mid:])):
+    while head != tail != mid:
         if len(set(topping[:mid])) < len(set(topping[mid:])):
             head = mid + 1
         elif len(set(topping[:mid])) >= len(set(topping[mid:])):
@@ -18,7 +18,7 @@ def findUpperBound(topping):
     tail = len(topping)
     mid = (head + tail) // 2
 
-    while len(set(topping[:mid])) != len(set(topping[mid:])) or head <= tail:
+    while head != tail != mid:
         if len(set(topping[:mid])) <= len(set(topping[mid:])):
             head = mid + 1
         elif len(set(topping[:mid])) > len(set(topping[mid:])):
@@ -33,8 +33,5 @@ def solution(topping):
     lowerBound = findLowerBound(topping)
     upperBound = findUpperBound(topping)
 
-    return lowerBound - upperBound
 
-print(solution([1,2,1,3,1,4,1,2]))
-# print(solution([1,2,3,1,4]))
-# print(solution([1,1,1,1,1]))
+    return upperBound - lowerBound
