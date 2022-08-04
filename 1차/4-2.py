@@ -1,12 +1,13 @@
 from collections import deque
-from copy import deepcopy
 
 
 def isSame(graph, target):
     for row in range(len(graph)):
-        for col in range(len(graph[0])):
-            if graph[row][col] != target[row][col]:
-                return False
+        join1 = "".join(graph[row])
+        join2 = "".join(target[row])
+        if join1 != join2:
+            return False
+            
     return True
 
 def flip(graph, target):
@@ -14,7 +15,12 @@ def flip(graph, target):
     direction = target[0]
     number = int(target[1])
 
-    flippedGraph = deepcopy(graph)
+    flippedGraph = []
+    for i in range(len(graph)):
+        row = []
+        for j in range(len(graph[i])):
+            row.append(graph[i][j])
+        flippedGraph.append(row)
 
     if direction == "x":
         for i in range(len(graph[0])):
@@ -46,14 +52,13 @@ def isInLoop(accum):
 def solution(beginning, target):
     
     q = deque()
-    # 현재 바둑판 모습 / 넘긴 횟수 / 이전 작업
+    # 현재 바둑판 모습 / 넘긴 횟수 / 누적된 작업
     q.append((beginning, 0, "zz"))
     
     while q:
         graph, count, accum = q.popleft()
 
-        # print(graph, count , accum)
-
+        # 현재 모습이랑 목표랑 같으면
         if isSame(graph, target):
             return count
 
@@ -61,8 +66,10 @@ def solution(beginning, target):
         if not isSame(graph, beginning) or accum[len(accum) - 2:] == "zz":
             # row 뒤집기
             for row in range(len(graph)):
+                # 이전에 뒤집은 row와 같으면 생략
                 if accum[len(accum) - 2:][0] == 'x' and accum[len(accum) - 2:][1] == str(row):
                     pass
+                # 같지 않으면 뒤집기
                 else:
                     action = "x" + str(row)
                     flipped = flip(graph, action)
@@ -70,16 +77,77 @@ def solution(beginning, target):
                     
             # col 뒤집기
             for col in range(len(graph[0])):
+                # 이전에 뒤집은 col과 같으면 생략
                 if accum[len(accum) - 2:][0] == 'y' and accum[len(accum) - 2:][1] == str(col):
                     pass
+                # 같지 않으면 뒤집기
                 else:
                     action = "y" + str(col)
                     flipped = flip(graph, action)
                     q.append((flipped, count + 1, accum + action))
-        elif isSame(graph, beginning) and isInLoop(accum):
+        # x0x1x0x1 같이 루프에 빠지는 경우 생략
+        elif isInLoop(accum):
             pass
+        # 최초 모습과 같으면 불가능
         else:
             return -1
 
 print(solution([[0, 1, 0, 0, 0], [1, 0, 1, 0, 1], [0, 1, 1, 1, 0], [1, 0, 1, 1, 0], [0, 1, 0, 1, 0]], [[0, 0, 0, 1, 1], [0, 0, 0, 0, 1], [0, 0, 1, 0, 1], [0, 0, 0, 1, 0], [0, 0, 0, 0, 1]]))
 print(solution([[0, 0, 0], [0, 0, 0], [0, 0, 0]], [[1, 0, 1], [0, 0, 0], [0, 0, 0]]))
+""" 
+x0
+    x1
+        x0
+            x1 - l
+        y0
+            x0
+            x1
+            y1
+        y1
+    y0
+        x0
+        x1
+        y1
+    y1
+        x0
+        x1
+        y0
+x1
+    x0
+        x1                   
+        y0
+        y1
+    y0
+        x0
+        x1
+        y1
+    y1
+        x0
+        x1
+        y0
+y1
+    x0
+        x1
+        y0
+        y1
+    x1
+        x0
+        y0
+        y1
+    y0
+        x0
+        x1
+        y1
+y2
+    x0
+        x1
+        y0
+        y1
+    x1
+        x0
+        y0
+        y1
+    y0
+        x0
+        x1
+        y1 """
