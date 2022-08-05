@@ -1,74 +1,93 @@
 import sys
 input = sys.stdin.readline
 
+SIZE = 100000
 INF = int(1e9)
-
-n = int(input())
-SIZE = 50
-heap = [INF] * SIZE
 lastIndex = 0
 
-def getLeftIndex(index):
-    return (index + 1) * 2 - 1
+n = int(input())
+heap = [INF] * SIZE
 
-def getRightIndex(index):
-    return (index + 1) * 2
+def swapTopDown(index):
+    leftChildIndex = index * 2 + 1
+    rightChildIndex = index * 2 + 2
+    if leftChildIndex > SIZE and rightChildIndex > SIZE:
+        return
+    
+    if abs(heap[leftChildIndex]) > abs(heap[rightChildIndex]):
+        smallerChildIndex = rightChildIndex
+    elif abs(heap[leftChildIndex]) < abs(heap[rightChildIndex]):
+        smallerChildIndex = leftChildIndex
+    else:
+        if heap[leftChildIndex] <= heap[rightChildIndex]:
+            smallerChildIndex = leftChildIndex
+        else:
+            smallerChildIndex = rightChildIndex
+            
+    # print(f"smallerChildIndex: {smallerChildIndex}")
 
+    if heap[smallerChildIndex] != INF:
+        if abs(heap[index]) > abs(heap[smallerChildIndex]):
+            heap[index], heap[smallerChildIndex] = heap[smallerChildIndex], heap[index]
+            swapTopDown(smallerChildIndex)
+        elif abs(heap[index]) == abs(heap[smallerChildIndex]) and heap[index] > heap[smallerChildIndex]:
+            heap[index], heap[smallerChildIndex] = heap[smallerChildIndex], heap[index]
+            swapTopDown(smallerChildIndex)
+
+def pop():
+
+    global lastIndex
+
+    minimum = heap[0]
+    heap[0] = heap[lastIndex - 1]
+    heap[lastIndex - 1] = INF
+    # print(f"heap: {heap}")
+    swapTopDown(0)
+
+    if lastIndex - 1 < 0:
+        lastIndex = 0
+    else:
+        lastIndex -= 1
+
+    return minimum
+
+def getParentIndex(index):
+    return index // 2 - 1 if index % 2 == 0 else (index - 1) // 2
 
 def swapBottomUp(index):
-    if index != 0:
-        parentIndex = (index // 2) - 1 if index % 2 == 0 else (index - 1) // 2
+    if index == 0:
+        return
+
+    parentIndex = getParentIndex(index)
+
+    if parentIndex < SIZE and index < SIZE:
         if abs(heap[parentIndex]) > abs(heap[index]):
             heap[parentIndex], heap[index] = heap[index], heap[parentIndex]
             swapBottomUp(parentIndex)
+        elif heap[parentIndex] * -1 == heap[index] and heap[parentIndex] > heap[index]:
+            heap[parentIndex], heap[index] = heap[index], heap[parentIndex]
+            swapBottomUp(parentIndex)
 
-def swapTopDown(index):
-    leftIndex = getLeftIndex(index)
-    rightIndex = getRightIndex(index)
-
-    if rightIndex < SIZE:
-        smallerSiblingIndex = leftIndex if abs(heap[leftIndex]) < abs(heap[rightIndex]) else rightIndex
-        if abs(heap[index]) > abs(heap[smallerSiblingIndex]):
-            heap[index], heap[smallerSiblingIndex] = heap[smallerSiblingIndex], heap[index]
-            swapTopDown(smallerSiblingIndex)
-
-def pop():
-    popped = heap[0]
-    heap[0] = INF
-    
+def insert(number):
     global lastIndex
-    leftIndex = getLeftIndex(lastIndex)
-    rightIndex = getRightIndex(lastIndex)
 
-    if rightIndex < SIZE:
-        smallerSiblingIndex = leftIndex if abs(heap[leftIndex]) < abs(heap[rightIndex]) else rightIndex
-        heap[0], heap[smallerSiblingIndex] = heap[smallerSiblingIndex], heap[0]
-        swapTopDown(0)
-    print(heap)
-    return popped
+    if heap[lastIndex] == INF and lastIndex < SIZE:
+        heap[lastIndex] = number
+        swapBottomUp(lastIndex)
+        lastIndex += 1
 
-def add(num):
-    global lastIndex
-    leftIndex = getLeftIndex(lastIndex)
-    rightIndex = getRightIndex(lastIndex)
-
-    if rightIndex < SIZE:
-        for index in (lastIndex, leftIndex, rightIndex):
-            if heap[index] == INF:
-                heap[index] = num
-                swapBottomUp(index)
-                print(heap)
-                break
+def start(n):
+    for _ in range(n):
+        number = int(input())
+        
+        if number == 0:
+            if heap[0] != INF:
+                print(pop())
+            else:
+                print(0)
         else:
-            lastIndex += 1
-            add(num)
+            insert(number)
 
-for _ in range(n):
-    num = int(input())
-    
-    if num != 0:
-        add(num)
-    elif num == 0 and heap[0] == INF:
-        print(0)
-    else:
-        print(pop())
+        # print(heap)
+
+start(n)
