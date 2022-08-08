@@ -1,6 +1,3 @@
-from collections import deque
-
-
 loop = int(input())
 
 INF = int(1e9)
@@ -59,38 +56,37 @@ def deleteBiggest():
 
     biggestIndex = getBiggestIndex()
     HEAP[biggestIndex] = INF
-    lastIndex -= 1
+    if lastIndex == 0:
+        lastIndex = 0
+    else:
+        lastIndex -= 1
 
 def swapTopDown(index):
     leftChildIndex = getLeftChildIndex(index)
     rightChildIndex = getRightChildIndex(index)
-    if leftChildIndex >= SIZE:
+    if leftChildIndex >= SIZE or (HEAP[leftChildIndex] == INF and HEAP[rightChildIndex] == INF):
         return
 
     if HEAP[index] < HEAP[leftChildIndex] and HEAP[index] < HEAP[rightChildIndex]:
         return
-    elif HEAP[index] > HEAP[leftChildIndex] and HEAP[index] < HEAP[rightChildIndex]:
-        HEAP[index], HEAP[leftChildIndex] = HEAP[leftChildIndex], HEAP[index]
-        swapTopDown(leftChildIndex)
-    elif HEAP[index] < HEAP[leftChildIndex] and HEAP[index] > HEAP[rightChildIndex]:
-        HEAP[index], HEAP[rightChildIndex] = HEAP[rightChildIndex], HEAP[index]
-        swapTopDown(rightChildIndex)
     else:
-        if HEAP[leftChildIndex] < HEAP[rightChildIndex]:
-            HEAP[index], HEAP[leftChildIndex] = HEAP[leftChildIndex], HEAP[index]
-            swapTopDown(leftChildIndex)
-        else:
-            HEAP[index], HEAP[rightChildIndex] = HEAP[rightChildIndex], HEAP[index]
-            swapTopDown(rightChildIndex)
+        smallerIndex = leftChildIndex if HEAP[leftChildIndex] < HEAP[rightChildIndex] else rightChildIndex
+        HEAP[index], HEAP[smallerIndex] = HEAP[smallerIndex], HEAP[index]
+        swapTopDown(smallerIndex)
 
 
 def deleteSmallest():
+    global lastIndex
     if lastIndex == 0:
         return
 
     HEAP[0] = HEAP[lastIndex - 1]
     HEAP[lastIndex - 1] = INF
     swapTopDown(0)
+    if lastIndex == 0:
+        lastIndex = 0
+    else:
+        lastIndex -= 1
 
 
 for _ in range(loop):
@@ -108,6 +104,7 @@ for _ in range(loop):
                 deleteBiggest()
             elif number == -1:
                 deleteSmallest()
+        # print(HEAP)
 
     if HEAP[0] == INF:
         print("EMPTY")
