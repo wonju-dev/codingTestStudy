@@ -1,6 +1,3 @@
-from turtle import distance
-
-
 INF = int(1e9)
 
 # index X에서 다른 node로 갈 때 드는 비용
