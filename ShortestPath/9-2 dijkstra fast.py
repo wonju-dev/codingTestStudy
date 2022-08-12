@@ -25,9 +25,13 @@ while q:
         continue
 
     for connection in graph[now]:
+        # 노드로 가는 비용, 현재 노드에서 갈 수 있는 노드
         dis, node = connection
+
+        # 0번에서 connectedNode로 바로 가는 비용이, 현재 노드에서 거쳐가는 비용보다 비싸면 변경
         if distance[node] > distance[now] + dis:
             distance[node] = distance[now] + dis
+            # connectedNode와 연결된 다른 노드들로 가는 방법들 중에, 현재 노드를 거쳐가는게 더 쌀 수 도 있으므로 검증
             heapq.heappush(q, (distance[now] + dis, node))
 
 print(distance)
