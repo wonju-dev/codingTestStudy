@@ -1,7 +1,7 @@
 loop = int(input())
 
 INF = int(1e9)
-SIZE = 100000
+SIZE = 1000000
 HEAP = [INF] * SIZE
 lastIndex = 0
 
