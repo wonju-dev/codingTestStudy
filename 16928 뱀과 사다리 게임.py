@@ -1,3 +1,4 @@
+# fail
 n, m = map(int, input().split())
 
 ladders = []
