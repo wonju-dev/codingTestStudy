@@ -44,7 +44,7 @@ def check(row, col):
         if minimum > count:
             minimum = count
 
-# 매 위치에 대해 검증
+# 매 위치에 대해 검증 시도
 for row in range(n):
     for col in range(m):
         check(row, col)
