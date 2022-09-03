@@ -1,1 +1,1 @@
-print("".join(map(str, sorted(list(map(int, list(input()))), reverse= True))))
+print("".join(map(str, sorted(list(input()), reverse= True))))
