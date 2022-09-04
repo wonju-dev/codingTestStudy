@@ -1,0 +1,1 @@
+print("".join(map(str, sorted(list(input()), reverse= True))))
