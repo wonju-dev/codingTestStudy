@@ -19,7 +19,6 @@ if length < m:
     remain = m - length
     for i in range(remain):
         chunks[i % (n - 1)] += 1
-        remain -= 1
 chunks = deque(chunks)
     
 def getAsciiDistance(a, b):
