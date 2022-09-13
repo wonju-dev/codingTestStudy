@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-class Main {
+class main {
 
     public static Double SHRINK_FACTOR = 1.3;
 
@@ -15,7 +15,6 @@ class Main {
         for (int i = 0; i < loop; i++) {
             List<Integer> numbers = getNumberArray(scanner.nextLine().split(" "));
             combSort(numbers);
-
         }
     }
 
@@ -23,17 +22,27 @@ class Main {
         int countCompare = 0;
         int countSwap = 0;
 
-        int gap = (int) Math.floor(numbers.size() / SHRINK_FACTOR);
+        int gap = numbers.size();
+        boolean sorted = false;
 
-        while (gap != 0) {
-            for (int i = 0; i < numbers.size() - gap; i++) {
-                countCompare++;
-                if (numbers.get(i) > numbers.get(i + gap)) {
-                    countSwap++;
-                    swap(numbers, i, i + gap);
-                }
-            }
+        while (!sorted) {
             gap = (int) Math.floor(gap / SHRINK_FACTOR);
+
+            if (gap <= 1) {
+                gap = 1;
+                sorted = true;
+            }
+
+            int index = 0;
+            while (index + gap < numbers.size()) {
+                countCompare++;
+                if (numbers.get(index) > numbers.get(index + gap)) {
+                    countSwap++;
+                    swap(numbers, index, index + gap);
+                    sorted = false;
+                }
+                index++;
+            }
         }
 
         System.out.println(countCompare + " " + countSwap);
