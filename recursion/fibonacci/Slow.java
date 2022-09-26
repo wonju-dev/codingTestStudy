@@ -2,7 +2,7 @@ package recursion.fibonacci;
 
 import java.util.Scanner;
 
-class main1 {
+class Slow {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int loop = Integer.parseInt(scanner.nextLine());
