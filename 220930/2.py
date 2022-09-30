@@ -1,33 +1,22 @@
-# O(N^2)을 어떻게 개선?
-# O(n)
+# O(n)으로 개선 가능
+# 거꾸로 접근하기
 case = int(input())
-
-def findMax(values):
-    index = 0
-    for i in range(len(values)):
-        if values[index] < values[i]:
-            index = i
-    return index
 
 while case > 0:
     num = int(input())
     values = list(map(int,input().split()))
+    
+    maxi = values[-1]
     ans = 0
 
-    while len(values) > 1:
-        maxIndex = findMax(values)
-        # print(values, maxIndex)
-
-        if maxIndex != 0:
-            for i in range(maxIndex):
-                ans += values[maxIndex] - values[i]
-                # print(values[i], i, ans)
-
-        values = values[maxIndex+1:]
+    for i in range(len(values) - 2, -1, -1):
+        if values[i] > maxi:
+            maxi = values[i]
+        else:
+            ans += maxi - values[i]
     print(ans)
 
     case -=1
-
 """
 3 3 7 9 7 4
 
