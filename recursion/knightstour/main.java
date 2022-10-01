@@ -5,8 +5,9 @@ import java.util.Scanner;
 
 public class main {
 
-    static int[][] delta = {{-2, -1}, {-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}};
-    static int count = 1;
+    static int[][] delta = {{-2, 1}, {-1, 2}, {1, 2}, {2, 1}, {2, -1}, {1, -2}, {-1, -2}, {-2, -1}};
+    static int width = 0;
+    static int height = 0;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -14,29 +15,32 @@ public class main {
 
         while (loop > 0) {
             int[] numbers = Arrays.stream(scanner.nextLine().split(" ")).mapToInt(Integer::parseInt).toArray();
-            int width = numbers[0];
-            int height = numbers[1];
+
+            width = numbers[0];
+            height = numbers[1];
+            int row = numbers[2] - 1;
+            int col = numbers[3] - 1;
             int[][] table = new int[width][height];
 
-            boolean canTour = knightTour(table, numbers[2] - 1, numbers[3] - 1, width, height);
+            table[row][col] = 1;
 
-            if (canTour) {
+            if (knightTour(table, row, col, 1)) {
                 System.out.println(1);
-                printAnswer(table, width, height);
+                printAnswer(table);
             } else {
                 System.out.println(0);
             }
 
-            count = 1;
+            loop--;
         }
     }
 
-    private static void printAnswer(int[][] table, int width, int height) {
+    private static void printAnswer(int[][] table) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 if (j != height - 1) {
                     System.out.print(table[i][j] + " ");
-                } else {
+                } else{
                     System.out.print(table[i][j]);
                 }
             }
@@ -44,12 +48,7 @@ public class main {
         }
     }
 
-    private static boolean knightTour(int[][] table, int row, int col, int width, int height) {
-        table[row][col] = count;
-
-        System.out.println(row + " " + col);
-
-        printAnswer(table, width, height);
+    private static boolean knightTour(int[][] table, int row, int col, int count) {
 
         if (count == width * height) {
             return true;
@@ -62,22 +61,18 @@ public class main {
             nextRow = row + delta[i][0];
             nextCol = col + delta[i][1];
 
-
             if (nextRow >= 0 && nextRow < width && nextCol >= 0 && nextCol < height) {
                 if (table[nextRow][nextCol] == 0) {
-                    System.out.println(nextRow + " " + nextCol);
-                    count++;
-                    boolean b = knightTour(table, nextRow, nextCol, width, height);
-                    if (!b) {
-                        continue;
-                    } else {
+                    table[nextRow][nextCol] = count + 1;
+
+                    if (knightTour(table, nextRow, nextCol, count + 1)) {
                         return true;
                     }
+
+                    table[nextRow][nextCol] = 0;
                 }
             }
         }
-
-        table[nextRow][nextCol] = 0;
         return false;
     }
 }
