@@ -20,13 +20,15 @@ public class main {
             height = numbers[1];
             int row = numbers[2] - 1;
             int col = numbers[3] - 1;
-            int[][] table = new int[width][height];
+            boolean[][] board = new boolean[width][height];
+            int[][] path = new int[width][height];
 
-            table[row][col] = 1;
+            board[row][col] = true;
+            path[row][col] = 1;
 
-            if (knightTour(table, row, col, 1)) {
+            if (knightTour(path, board, row, col, 1)) {
                 System.out.println(1);
-                printAnswer(table);
+                printAnswer(path);
             } else {
                 System.out.println(0);
             }
@@ -35,20 +37,21 @@ public class main {
         }
     }
 
-    private static void printAnswer(int[][] table) {
+    private static void printAnswer(int[][] path) {
         for (int i = 0; i < width; i++) {
+            String row = "";
             for (int j = 0; j < height; j++) {
                 if (j != height - 1) {
-                    System.out.print(table[i][j] + " ");
+                    row += path[i][j] + " ";
                 } else{
-                    System.out.print(table[i][j]);
+                    row += path[i][j];
                 }
             }
-            System.out.println();
+            System.out.println(row);
         }
     }
 
-    private static boolean knightTour(int[][] table, int row, int col, int count) {
+    private static boolean knightTour(int[][] path, boolean[][] board, int row, int col, int count) {
 
         if (count == width * height) {
             return true;
@@ -62,14 +65,15 @@ public class main {
             nextCol = col + delta[i][1];
 
             if (nextRow >= 0 && nextRow < width && nextCol >= 0 && nextCol < height) {
-                if (table[nextRow][nextCol] == 0) {
-                    table[nextRow][nextCol] = count + 1;
+                if (board[nextRow][nextCol] == false) {
+                    board[nextRow][nextCol] = true;
+                    path[nextRow][nextCol] = count + 1;
 
-                    if (knightTour(table, nextRow, nextCol, count + 1)) {
+                    if (knightTour(path, board, nextRow, nextCol, count + 1)) {
                         return true;
                     }
 
-                    table[nextRow][nextCol] = 0;
+                    board[nextRow][nextCol] = false;
                 }
             }
         }
