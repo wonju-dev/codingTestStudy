@@ -9,20 +9,81 @@ else:
     q = deque()
     q.append([s, ""])
 
-    dp = [False for _ in range(t)]
+    didOne = False
 
     while q:
 
         now, his = q.popleft()
 
-        multiply = (now * now, "*")
-        plus = (now * 2, "+")
-        minus = (0, "-")
-        divide = (1, "/")
+        # print(f"now={now}, his={his}")
+        
+        if now == t:
+            print(his)
+            break
+        else:
+            multiply = (now * now, "*")
+            plus = (now * 2, "+")
+            divide = (1, "/")
 
-        for value in [multiply, plus, minus, divide]:
-            if value[0] < t:
-                if not dp[value[0]]:
-                    dp[value[0]] = his + value[1]
-                    q.append((value[0], dp[value[0]]))
-    print(dp)
+            for value in [multiply, plus, divide]:
+                if value[0] <= t:
+                    if value[0] == 1:
+                        if not didOne:
+                            didOne = True
+                            q.append((value[0], his + value[1]))
+                    else:
+                        q.append((value[0], his + value[1]))
+
+    else:
+        print(-1)
+
+
+"""
+7 * 7
+    (7 * 7) ^ 2
+        (7 * 7) ^ 2 ^ 2
+        (7 * 7) ^ 2 * 2
+        0
+        1
+    (7 * 7) * 2
+        ((7 * 7) * 2) ^ 2
+        (7 * 7) * 2 * 2
+        0
+        1
+    0
+    1
+        1
+        2
+        0
+        1
+
+7 + 7
+    (7 + 7) ^ 2
+    (7 + 7) * 2
+    0
+    1
+
+0
+    0
+    0
+    0
+
+1
+    1
+        1
+        2
+        0
+        1
+    2
+        4
+        4
+        0
+        1
+    0
+    1
+        1
+        2
+        0
+        1
+
+"""
