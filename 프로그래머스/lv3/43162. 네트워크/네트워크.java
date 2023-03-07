@@ -6,19 +6,16 @@ class Solution {
         int count = 0;
         boolean[] visited = new boolean[n];
 
-        for (int now = 0; now < n; now++) {
-            // System.out.println("now: " + now);
-            if (!visited[now]) {
+        for (int startIndex = 0; startIndex < n; startIndex++) {
+            if (!visited[startIndex]) {
                 Queue<Integer> q = new ArrayDeque<>();
-                q.add(now);
+                q.add(startIndex);
                 while (!q.isEmpty()) {
-                    Integer p = q.poll();
-                    // System.out.println("p: " + p);
-                    visited[p] = true;
+                    Integer cur = q.poll();
+                    visited[cur] = true;
                     for (int i = 0; i < n; i++) {
-                        boolean isConnected = computers[p][i] == 1;
-                        // System.out.println("isConnected: " + isConnected);
-                        if (p != i && isConnected && !visited[i]) {
+                        boolean isConnected = computers[cur][i] == 1;
+                        if (cur != i && isConnected && !visited[i]) {
                             q.add(i);
                             visited[i] = true;
                         }
