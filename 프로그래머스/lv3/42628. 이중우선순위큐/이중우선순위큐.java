@@ -15,7 +15,7 @@ class Solution {
             if (op.equals("I")) {
                 insert(value);
             } else {
-                if (rq.size() < 1) {
+                if (rq.size() == 0) {
                     continue;
                 }
                 if (value == -1) {
@@ -28,7 +28,7 @@ class Solution {
         int[] answer = new int[2];
         System.out.println(q);
         System.out.println(rq);
-        if (rq.size() > 0) {
+        if (rq.size() != 0) {
             answer[0] = rq.poll();
             answer[1] = q.poll();
         }
