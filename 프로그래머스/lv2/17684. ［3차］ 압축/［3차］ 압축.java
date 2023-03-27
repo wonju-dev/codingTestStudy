@@ -15,11 +15,8 @@ class Solution {
     public static int[] solution(String msg) {
         List<Integer> answer = new ArrayList<>();
         while (index < msg.length()) {
-            // System.out.println("index: " + index);
             int code = getSubString(index, msg);
             answer.add(code);
-            // System.out.println(dict);
-            // System.out.println(answer);
         }
         return answer.stream().filter(i -> i != 0).mapToInt(Integer::valueOf).toArray();
     }
@@ -28,7 +25,6 @@ class Solution {
         for (int end = msg.length(); end > start; end--) {
             String subString = msg.substring(start, end);
             if (dict.get(subString) != null) {
-                // System.out.println("subString: " + subString);
                 if (end < msg.length() - 1) {
                     String newString = subString + msg.charAt(end);
                     dict.put(newString, dict.size() + 1);
